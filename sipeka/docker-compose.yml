@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  # Web Server (PHP 8.2 + Apache)
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sipeka_web
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - ./:/var/www/html
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_DATABASE=sipeka_db
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=secret
+    depends_on:
+      - db
+    networks:
+      - sipeka_network
+
+  # Database Server (PostgreSQL 15)
+  db:
+    image: postgres:15-alpine
+    container_name: sipeka_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: sipeka_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - sipeka_network
+
+  # Database GUI (Adminer) - Buka di browser: http://localhost:8080
+  adminer:
+    image: adminer:latest
+    container_name: sipeka_adminer
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    networks:
+      - sipeka_network
+
+volumes:
+  pgdata:
+    driver: local
+
+networks:
+  sipeka_network:
+    driver: bridge

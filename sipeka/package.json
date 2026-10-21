@@ -1,0 +1,17 @@
+{
+  "name": "sipeka",
+  "version": "1.0.0",
+  "description": "Sistem Pengaduan Kampus (SIPEKA) - Jurusan Teknologi Informasi Politeknik Negeri Malang",
+  "author": "Kelompok PBL TI 2F (Salsabila, Calvin, Ghafin, Galih)",
+  "license": "MIT",
+  "scripts": {
+    "dev": "serve -l 3000 .",
+    "start": "serve -l 3000 .",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:logs": "docker compose logs -f"
+  },
+  "devDependencies": {
+    "serve": "^14.2.4"
+  }
+}
